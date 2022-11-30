@@ -7,5 +7,5 @@ x: execution
 d: directory
 -: file (edited)
 to add the execution permission to a file we do
-chmod +x filename
+chmod  u+x filename
 check if the x is added by typing ls -l
