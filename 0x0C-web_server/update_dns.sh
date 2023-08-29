@@ -1,4 +1,5 @@
-nformations à partir du fichier JSON
+#!/bin/bash
+#informations à partir du fichier JSON
 DOMAIN="holb2023fs3eft.tech"
 IP_ADDRESS="3.85.41.154"
 WHOIS_SERVER="whois.nic.tech"
