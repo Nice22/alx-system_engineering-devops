@@ -1,5 +1,5 @@
-
-n to query subscribers on a given Reddit subreddit."""
+#!/usr/bin/python3
+"""Function to query subscribers on a given Reddit subreddit."""
 import requests
 
 
