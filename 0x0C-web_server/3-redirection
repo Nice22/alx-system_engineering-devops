@@ -9,32 +9,33 @@ brown='\e[0;33m'
 green='\e[1;32m'
 reset='\033[0m'
 
-echo -e "${blue}Updating and installing ${brown}Nginx${blue}.${reset}\n"
-sudo apt-get update -y -qq && \
-	 sudo apt-get install nginx -y
+# Update the package repository and install Nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 
-echo -e "\n${blue}Setting up some minor stuff.${reset}\n"
+# Define the hostname based on the machine's hostname
+hostname=$(hostname)
 
-# starting nginx service
-sudo service nginx start
+# Create a custom Nginx configuration file for redirection
+cat <<EOF | sudo tee /etc/nginx/conf.d/3-redirection.conf
+server {
+    listen 80;
+    server_name _;
 
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+    # Define the location for redirection
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+    # Include additional Nginx configuration files
+    include /etc/nginx/sites-enabled/*;
+}
+EOF
 
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+# Remove the default configuration symlink
+sudo rm -f /etc/nginx/sites-enabled/default
 
-# Creating new index
-echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
-
-# Setting up /redirect_me to a youtube video
-sudo sed -i '24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
-
-# Restarting nginx
+echo -e "\n${bleu} Restart Nginx to apply the changes.${reset} \4n" 
 sudo service nginx restart
 
 echo -e "\n${green}Completed.${reset} ✅\n"
