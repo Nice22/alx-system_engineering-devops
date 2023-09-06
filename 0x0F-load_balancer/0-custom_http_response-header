@@ -11,32 +11,42 @@
 #!/bin/bash
 
 # Update the package repository and install Nginx
-sudo apt-get update
-sudo apt-get install -y nginx
+if ! command -v nginx &>/dev/null; then
+	sudo apt-get update
+	sudo apt-get install -y nginx
+fi
 
-# Define the hostname based on the machine's hostname
-hostname=$(hostname)
+# Define the custom header name
+custom_header_name="X-Served-By"
 
-# Create a custom Nginx configuration file
-cat <<EOF | sudo tee /etc/nginx/conf.d/0-custom-http-header.conf
-server {
-    listen 80;
+# Get the hostname of the server
+server_hostname=$(192264-web-02)
+
+# Create an Nginx configuration file for the custom header
+echo "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
     server_name _;
 
-    # Add the custom X-Served-By header
     location / {
-        add_header X-Served-By $hostname;
-        proxy_pass http://backend;
+        add_header $custom_header_name $server_hostname;
+        root /var/www/html;
+        index index.html;
     }
+}" | sudo tee /etc/nginx/sites-available/custom_header
 
-    # Include additional Nginx configuration files
-    include /etc/nginx/sites-enabled/*;
-}
-EOF
+# Create a symbolic link to enable the configuration
+sudo ln -s /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/
 
-# Remove the default configuration symlink
+# Remove the default Nginx configuration (if needed)
 sudo rm -f /etc/nginx/sites-enabled/default
 
-# Restart Nginx to apply the changes
-sudo service nginx restart
+# Test Nginx configuration for syntax errors
+sudo nginx -t
 
+# Reload Nginx to apply the changes
+sudo systemctl reload nginx
+
+# Exit the script
+exit 0
