@@ -20,7 +20,7 @@ fi
 custom_header_name="X-Served-By"
 
 # Get the hostname of the server
-server_hostname=$(192264-web-02)
+server_hostname="$(hostname)"
 
 # Create an Nginx configuration file for the custom header
 echo "server {
@@ -30,14 +30,16 @@ echo "server {
     server_name _;
 
     location / {
-        add_header $custom_header_name $server_hostname;
+        add_header X-Served-By $custom_header_name;
         root /var/www/html;
         index index.html;
     }
 }" | sudo tee /etc/nginx/sites-available/custom_header
 
 # Create a symbolic link to enable the configuration
-sudo ln -s /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/
+if [ ! -e /etc/nginx/sites-enabled/custom_header ]; then
+    sudo ln -s /etc/nginx/sites-available/custom_header /etc/nginx/sites-enabled/
+fi
 
 # Remove the default Nginx configuration (if needed)
 sudo rm -f /etc/nginx/sites-enabled/default
