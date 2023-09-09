@@ -10,7 +10,7 @@ if ! dpkg -l | grep -q nginx; then
 fi
 
 # configure Nginx to add a custom header
-suo sed -i '/server_name _;/a \  add_header X-Served-By $hostname;' /etc/nginx/sites-enabled/default
+sudo sed -i '/server_name _;/a \  add_header X-Served-By $hostname;' /etc/nginx/sites-enabled/default
 
 	sudo ufw allow 'Nginx HTTP'
 	sudo mkdir -p /var/www/html /var/www/error
