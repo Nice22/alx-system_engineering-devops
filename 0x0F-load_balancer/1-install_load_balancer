@@ -1,24 +1,52 @@
-#!/usr/bin/env bash
-# Configure Nginx so that its HTTP response contains
-# a custom header
-# Add HAProxy PPA
-sudo apt-get -y install software-properties-common
-sudo add-apt-repository -y ppa:vbernat/haproxy-2.5
-sudo apt-get -y update
+#!/bin/bash
+
+# Update the package list and upgrade installed packages
+sudo apt-get update
+sudo apt-get upgrade -y
 
 # Install HAProxy
-sudo apt-get -y install haproxy
-sudo sed -i -e '$aENABLED=1\n' /etc/default/haproxy
-sudo sed -i -e '$a\listen http-in\n\tbind :80\n\tbalance roundrobin\n\tserver web-01 34.207.156.22:80 check\n\tserver web-02 52.91.153.42:80 check\n' /etc/haproxy/haproxy.cfg
+sudo apt-get install -y haproxy
 
-# Get the IP addresses of the servers
-IP_ADDRS=$(awk '/server/ {print $2}' /etc/haproxy/haproxy.cfg)
+# Configure HAProxy
+sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.backup
+sudo touch /etc/haproxy/haproxy.cfg
 
-sudo service haproxy restart
+cat <<EOF | sudo tee /etc/haproxy/haproxy.cfg
+global
+    daemon
+    maxconn 256
 
-# Print the IP addresses
-echo "The IP addresses of the servers are:"
-echo $IP_ADDRS
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
 
+frontend http_front
+    bind *:80
+    mode http
+    default_backend http_back
 
+backend http_back
+    mode http
+    balance roundrobin
+    server web-01 34.207.156.22:80 check
+    server web-02 52.91.153.42:80 check
+EOF
+
+# Verify HAProxy configuration
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+
+# Enable and start HAProxy as a service
+sudo systemctl enable haproxy
+sudo systemctl start haproxy
+
+# Ensure HAProxy is added to the init script
+sudo update-rc.d haproxy defaults
+
+# Update the hostname of the server
+sudo hostnamectl set-hostname [STUDENT_ID]-lb-01
+
+# Reboot to apply changes
+sudo reboot
 
