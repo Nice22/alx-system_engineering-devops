@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Update the package list and upgrade installed packages
 sudo apt-get update
