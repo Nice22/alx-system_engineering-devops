@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-# This Bash script configures a new Ubuntu machine to match the task requirements
+# Your Bash script configures a new Ubuntu machine to match the task requirements
 
 # Update the package list and upgrade installed packages
 sudo apt-get update
@@ -47,7 +46,7 @@ sudo systemctl start haproxy
 sudo update-rc.d haproxy defaults
 
 # Update the hostname of the server
-sudo hostnamectl set-hostname [STUDENT_ID]-lb-01
+sudo hostnamectl set-hostname 192264-lb-01
 
 # Reboot to apply changes
 sudo service haproxy restart
