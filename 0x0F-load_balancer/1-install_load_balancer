@@ -31,8 +31,10 @@ frontend http_front
 backend http_back
     mode http
     balance roundrobin
-    server web-01 34.207.156.22:80 check
-    server web-02 52.91.153.42:80 check
+    server hostname hostIP:PORT check
+    server 192264-web-01 34.207.156.22:80 check
+    server 192264-web-02 52.91.153.42:80 check
+
 EOF
 
 # Verify HAProxy configuration
