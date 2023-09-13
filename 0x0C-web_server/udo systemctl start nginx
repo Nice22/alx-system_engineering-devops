@@ -1,0 +1,13 @@
+[0;1;31m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Tue 2023-09-12 00:54:08 UTC; 21min ago
+       Docs: man:nginx(8)
+    Process: 40748 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; [0;1;31m(code=exited, status=1/FAILURE)[0m
+
+Sep 12 00:54:08 192264-web-01 systemd[1]: Starting A high performance web server and a reverse proxy server...
+Sep 12 00:54:08 192264-web-01 nginx[40748]: nginx: [emerg] "server" directive is not allowed here in /etc/nginx/sites-enabled/default:1
+Sep 12 00:54:08 192264-web-01 nginx[40748]: nginx: configuration file /etc/nginx/nginx.conf test failed
+Sep 12 00:54:08 192264-web-01 systemd[1]: [0;1;39m[0;1;31m[0;1;39mnginx.service: Control process exited, code=exited, status=1/FAILURE[0m
+Sep 12 00:54:08 192264-web-01 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mnginx.service: Failed with result 'exit-code'.[0m
+Sep 12 00:54:08 192264-web-01 systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start A high performance web server and a reverse proxy server.[0m
+Sep 12 01:14:14 192264-web-01 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mnginx.service: Unit cannot be reloaded because it is inactive.[0m
