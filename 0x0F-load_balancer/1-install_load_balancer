@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Your Bash script configures a new Ubuntu machine to match the task requirements
-2
+
 # Update the package list and upgrade installed packages
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -31,7 +31,7 @@ frontend http_front
 backend http_back
     mode http
     balance roundrobin
-    server web-01 54.237.53.245:80 check
+    server web-01 54.144.137.166:80 check
     server web-02 54.237.14.236:80 check
 
 EOF
