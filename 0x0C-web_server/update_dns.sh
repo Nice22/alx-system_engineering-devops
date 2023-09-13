@@ -1,7 +1,7 @@
 #!/bin/bash
 #informations à partir du fichier JSON
 DOMAIN="holb2023fs3eft.tech"
-IP_ADDRESS="3.85.41.154"
+IP_ADDRESS="54.237.53.245"
 WHOIS_SERVER="whois.nic.tech"
 
 # Récupérer l'enregistrement WHOIS à partir du serveur WHOIS
