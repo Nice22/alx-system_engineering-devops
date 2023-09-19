@@ -9,9 +9,14 @@ defaults
     timeout server 50000ms
 
 frontend http_front
-    bind *:80 ssl crt /etc/letsencrypt/live/www.holb2023fs3eft.tech/www.holb2023fs3eft.tech.pem
+    bind *:80 
     mode http
     default_backend http_back
+
+frontend web_frontend_secure
+        bind *:443 ssl crt /etc/letsencrypt/live/www.holb2023fs3eft.tech/www.holb2023fs3eft.tech.pem
+        default_backend http_back
+
 
 backend http_back
     mode http
