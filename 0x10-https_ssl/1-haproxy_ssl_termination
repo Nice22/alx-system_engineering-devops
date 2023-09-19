@@ -14,12 +14,12 @@ frontend http_front
     default_backend http_back
 
 frontend web_frontend_secure
-        bind *:443 ssl crt /etc/letsencrypt/live/www.holb2023fs3eft.tech/www.holb2023fs3eft.tech.pem
-        default_backend http_back
-
+    bind *:443 ssl crt /etc/letsencrypt/live/www.holb2023fs3eft.tech/fullchain.pem
+    default_backend http_back
 
 backend http_back
     mode http
     balance roundrobin
     server web-01 54.144.137.166:80 check
     server web-02 54.237.14.236:80 check
+
