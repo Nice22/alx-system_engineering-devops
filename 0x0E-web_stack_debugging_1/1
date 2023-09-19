@@ -1,6 +1,0 @@
-<<<<<<< HEAD
--bash: ./0-nginx_likes_port_80: Permission denied
-=======
- * Restarting nginx nginx
-   ...fail!
->>>>>>> a4bff948935b2925c6bb72d550219721bb52bed1
