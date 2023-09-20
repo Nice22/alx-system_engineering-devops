@@ -21,7 +21,7 @@ backend http_back
     mode http
     balance roundrobin
     server web-01 54.144.137.166:80 check
-    server web-02 54.237.14.236:80 check
+    server web-02 52.87.220.107:80 check
 
 listen 192264-lb-01
         bind *:80
