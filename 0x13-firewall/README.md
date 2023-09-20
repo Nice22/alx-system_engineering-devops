@@ -8,8 +8,9 @@ Your servers without a firewall…
 <img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/155/holbertonschool-firewall.gif" alt="" loading="lazy" style="">
 
 ## Resources
-Read or watch:
-<a href="/rltoken/vjB4LyHRdtEImzZcuD89ZQ" title="What is a firewall" target="_blank">What is a firewall</a>
+<p>Read or watch:</p>
+
+<p><a href="/rltoken/vjB4LyHRdtEImzZcuD89ZQ" title="What is a firewall" target="_blank">What is a firewall</a></p>
 
 ## More Info
 As explained in the web stack debugging guide concept page, telnet is a very good tool to check if sockets are open with telnet IP PORT. For example, if you want to check if port 22 is open on web-02:
