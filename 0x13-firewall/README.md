@@ -4,8 +4,9 @@
 For this project, we expect you to look at this concept:<a href="/concepts/68">Web stack debugging</a>
 
 ## Background Context
-Your servers without a firewall…
-<img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/155/holbertonschool-firewall.gif" alt="" loading="lazy" style="">
+<p>Your servers without a firewall…</p>
+<p><img src="https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/155/holbertonschool-firewall.gif" alt="" loading="lazy" style=""></p>
+
 
 ## Resources
 <p>Read or watch:</p>
