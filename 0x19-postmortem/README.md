@@ -1,59 +1,38 @@
 # Postmortem
+In the wake of the release of ALX's System Engineering & DevOps project 0x19, at around 7:00 West African Time (WAT) here in Benin, an outage struck an isolated Ubuntu 14.04 container running an Apache web server. GET requests on the server yielded 500 Internal Server Errors, when the expected response should have been an HTML file defining a simple Holberton WordPress site.
 
-Upon the release of ALX's System Engineering & DevOps project 0x19, approximately 7:00 West African Time (WAT) here in Benin, an outage occurred on an isolated Ubuntu 14.04 container running an Apache web server. GET requests on the server led to 500 Internal Server Error's, when the expected response was an HTML file defining a simple Holberton WordPress site.
+## Debugging Odyssey
+Our intrepid bug hunter, Nicétas (Nice22... yes, like my actual initials on GitHub ;)...), stumbled upon the issue around 19:20 PST, prompted to confront it. He promptly embarked on a quest to vanquish this enigmatic issue.
 
-## Debugging Process
+Checked running processes using ps aux. Two apache2 processes - root and www-data - were found to be in action.
 
-Bug debugger Nicétas (Nice22... as in my actual initials on github ;)... ) encountered the issue upon opening the project and being, well, instructed to
-address it, roughly 19:20 PST. He promptly proceeded to undergo solving the problem.
+Explored the sites-available folder in the /etc/apache2/ directory and ascertained that the web server was serving content from /var/www/html/.
 
-1. Checked running processes using `ps aux`. Two `apache2` processes - `root` and `www-data` -
-were properly running.
+In one terminal, conducted an strace on the PID of the root Apache process. In another, summoned a curl to the server. Great expectations... only to face disappointment. strace divulged no useful information.
 
-2. Looked in the `sites-available` folder of the `/etc/apache2/` directory. Determined that
-the web server was serving content located in `/var/www/html/`.
+Repeated step 3, this time with the PID of the www-data process. Kept expectations more modest this time... but lo and behold! strace unveiled an -1 ENOENT (No such file or directory) error when attempting to access the file /var/www/html/wp-includes/class-wp-locale.phpp.
 
-3. In one terminal, ran `strace` on the PID of the `root` Apache process. In another, curled
-the server. Expected great things... only to be disappointed. `strace` gave no useful
-information.
+Scoured through files in the /var/www/html/ directory one by one, utilizing Vim's pattern-matching skills to pinpoint the erroneous .phpp file extension. Located it in the wp-settings.php file (Line 137, require_once( ABSPATH . WPINC . '/class-wp-locale.php' );).
 
-4. Repeated step 3, except on the PID of the `www-data` process. Kept expectations lower this
-time... but was rewarded! `strace` revelead an `-1 ENOENT (No such file or directory)` error
-occurring upon an attempt to access the file `/var/www/html/wp-includes/class-wp-locale.phpp`.
+Swiftly removed the surplus p from the line.
 
-5. Looked through files in the `/var/www/html/` directory one-by-one, using Vim pattern
-matching to try and locate the erroneous `.phpp` file extension. Located it in the
-`wp-settings.php` file. (Line 137, `require_once( ABSPATH . WPINC . '/class-wp-locale.php' );`).
+Launched another curl expedition on the server. 200 - All good!
 
-6. Removed the trailing `p` from the line.
+Crafted a Puppet manifesto to automate the eradication of this typo.
 
-7. Tested another `curl` on the server. 200 A-ok!
+## In a Nutshell
+In short, it was a typo, a classic tale. The WordPress application encountered a critical error in wp-settings.php when trying to load the file class-wp-locale.phpp. The correct file name, situated in the wp-content directory of the application folder, was class-wp-locale.php.
 
-8. Wrote a Puppet manifest to automate fixing of the error.
+The solution was a straightforward correction of the typo, simply removing the extra p.
 
-## Summation
+## Safeguarding the Future
+This incident was not a web server error but an application error. To shield against such escapades in the future, do consider the following:
 
-In short, a typo. Gotta love'em. In full, the WordPress app was encountering a critical
-error in `wp-settings.php` when tyring to load the file `class-wp-locale.phpp`. The correct
-file name, located in the `wp-content` directory of the application folder, was
-`class-wp-locale.php`.
+Testing! Test, test, and test some more. Test the application before it sets sail. This error could have been detected and addressed much earlier if the application had been rigorously tested.
 
-Patch involved a simple fix on the typo, removing the trailing `p`.
+Keep a vigilant eye. Enable an uptime monitoring service like UptimeRobot to provide instant alerts in the event of a website outage.
 
-## Prevention
+It's worth noting that in response to this error, a Puppet manifesto titled
+0-strace_is_your_friend.pp was conjured to automate the resolution of any identical errors should they dare to resurface in the future. The manifesto promptly replaces any phpp extensions in the file /var/www/html/wp-settings.php with php.
 
-This outage was not a web server error, but an application error. To prevent such outages
-moving forward, please keep the following in mind.
-
-* Test! Test test test. Test the application before deploying. This error would have arisen
-and could have been addressed earlier had the app been tested.
-
-* Status monitoring. Enable some uptime-monitoring service such as
-[UptimeRobot](./https://uptimerobot.com/) to alert instantly upon outage of the website.
-
-Note that in response to this error, I wrote a Puppet manifest
-[0-strace_is_your_friend.pp](https://github.com/Nice22/alx-system_engineering-devops/blob/master/0x17-web_stack_debugging_3/0-strace_is_your_friend.pp)
-to automate fixing of any such identitical errors should they occur in the future. The manifest
-replaces any `phpp` extensions in the file `/var/www/html/wp-settings.php` with `php`.
-
-But of course, it will never occur again, because we are programmers and we learn from our mistakes to move forward 	
+But of course, it's all smooth sailing from here, for we are programmers, and we learn from our misadventures to forge ahead 🚀😊👨‍💻
